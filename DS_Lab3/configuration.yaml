@@ -1,0 +1,55 @@
+groups : # A single, top-level section in the YAML file
+  - name : Group1 # Group names must be unique
+    members : # Any number of members in the group
+      - alice 
+      - bob
+      - charlie
+  - name : Group2 
+    members :    
+      - daphnie
+      - bob
+      - charlie
+      
+configuration :
+  - name : alice
+    ip   : 127.0.0.1
+    port : 12344 # This is the incoming port on which MP will listen
+               # May be changed for further communication as usual
+  - name : bob
+    ip   : 127.0.0.1
+    port : 14255
+  - name : charlie
+    ip   : 127.0.0.1
+    port : 12998
+  - name : daphnie
+    ip   : 127.0.0.1
+    port : 1987 
+  - name : logger
+    ip   : localhost
+    port : 54637  
+
+sendRules :
+  - action : drop # Ack message number 4 from bob to alice will not be sent
+    src    : alice
+    dest   : bob
+    #kind   : Ack
+    seqNum : 1
+  - action : delay # Every Lookup message in the system will be delayed
+    kind   : Lookup 
+
+receiveRules :
+  - action : duplicate # 3rd message from Charlie that anyone
+    src    : daphnie # receives will be duplicated
+    seqNum : 3
+  - action : delay
+    src	   : alice
+    dest   : bob
+    seqNum : 4
+  #- action : drop
+    #src	   : charlie
+    #dest   : bob
+    #kind   : Ack
+    #seqNum : 4
+
+
+
